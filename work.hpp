@@ -2,6 +2,7 @@
 
 #include "request.hpp"
 #include "error.hpp"
+#include "loop.hpp"
 
 namespace uvpp
 {
@@ -20,7 +21,7 @@ namespace uvpp
         	callbacks::store(get()->data, internal::uv_cid_after_work, afterCallback);
 
         	return (
-        		uv_queue_work(loop_.get(), get(),
+        		uv_queue_work(loop_, get(),
         			[](uv_work_t* req) {
                 		callbacks::invoke<decltype(callback)>(req->data, internal::uv_cid_work);
             		}, 
@@ -30,6 +31,6 @@ namespace uvpp
             );
         }
     private:
-    	loop loop_;    	       	
+    	uv_loop_t *loop_;    	       	
     };
 }
